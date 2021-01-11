@@ -53,7 +53,7 @@ def test_deploy_private_registry():
     private_registry_node.public_ip_address,RANCHER_PR_PORT)]}
 
     bypass_insecure_cmd="sudo echo '{}' " \
-    "> /etc/docker/daemon.json && " \
+    "| sudo tee /etc/docker/daemon.json && " \
     "sudo systemctl daemon-reload && sudo systemctl restart docker".format(
     json.dumps(registry_json)
     )
@@ -66,7 +66,7 @@ def test_deploy_private_registry():
     "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd   registry:2".format(
     RANCHER_PR_PORT)
     print("sudo installing apache2")
-    print(private_registry_node.execute_command("sudo apt-get install apache2-utils"))
+    print(private_registry_node.execute_command("sudo apt-get -y install apache2-utils"))
     print("writing bypass cmd")
     print(private_registry_node.execute_command(bypass_insecure_cmd))
     print("docker Running")
@@ -78,8 +78,8 @@ def test_deploy_private_registry():
 
     apply_images_cmd="sudo sed -i '58d' rancher-save-images.sh && " \
     "sudo sed -i '76d' rancher-load-images.sh && " \
-    "chmod +x rancher-save-images.sh && chmod +x rancher-load-images.sh" \
-    "./rancher-save-images.sh --image-list ./rancher-images.txt" \
+    "chmod +x rancher-save-images.sh && chmod +x rancher-load-images.sh && " \
+    "./rancher-save-images.sh --image-list ./rancher-images.txt && " \
     "./rancher-load-images.sh --image-list ./rancher-images.txt --registry " \
     "{}:{}".format(private_registry_node.public_ip_address,RANCHER_PR_PORT)
 
