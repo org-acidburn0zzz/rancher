@@ -59,7 +59,7 @@ def test_deploy_private_registry():
     )
 
     pr_cmd="mkdir auth && htpasswd -Bbn testuser " \
-    "4@_NE8FnxDQqvFJbodYq > auth/htpasswd && " \
+    "pass > auth/htpasswd && " \
     "docker run -d   -p {}:5000   --restart=always   --name registry2 " \
     "-v \"$(pwd)\"/auth:/auth   -e \"REGISTRY_AUTH=htpasswd\" " \
     "-e \"REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm\"   -e " \
